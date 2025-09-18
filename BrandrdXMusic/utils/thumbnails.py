@@ -5,140 +5,132 @@ import random
 import aiofiles
 import aiohttp
 
+from PIL import Image, ImageDraw, ImageEnhance
+from PIL import ImageFilter, ImageFont, ImageOps
+
+from unidecode import unidecode
+from youtubesearchpython.__future__ import VideosSearch
+
 from BrandrdXMusic import app
 from config import YOUTUBE_IMG_URL
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music Thumbnail</title>
-  <style>
-    body {
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: #fff;
-    }
 
-    .thumbnail {
-      width: 800px;
-      background: rgba(0, 0, 0, 0.85);
-      border-radius: 20px;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-    }
+def changeImageSize(maxWidth, maxHeight, image):
+    widthRatio = maxWidth / image.size[0]
+    heightRatio = maxHeight / image.size[1]
+    newWidth = int(widthRatio * image.size[0])
+    newHeight = int(heightRatio * image.size[1])
+    newImage = image.resize((newWidth, newHeight))
+    return newImage
 
-    .thumbnail img {
-      width: 300px;
-      border-radius: 15px;
-      float: right;
-    }
 
-    .playlist {
-      float: left;
-      width: 450px;
-    }
+def clear(text):
+    list = text.split(" ")
+    title = ""
+    for i in list:
+        if len(title) + len(i) < 60:
+            title += " " + i
+    return title.strip()
 
-    .playlist h1 {
-      font-size: 40px;
-      font-weight: bold;
-      color: #ffcc00;
-      margin: 10px 0;
-      line-height: 1.2;
-    }
 
-    .playlist h2 {
-      font-size: 22px;
-      margin: 0;
-      color: #fff;
-    }
+async def get_thumb(videoid):
+    if os.path.isfile(f"cache/{videoid}.png"):
+        return f"cache/{videoid}.png"
 
-    .songs {
-      margin-top: 15px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #ddd;
-      max-height: 350px;
-      overflow-y: auto;
-    }
+    url = f"https://www.youtube.com/watch?v={videoid}"
+    try:
+        results = VideosSearch(url, limit=1)
+        for result in (await results.next())["result"]:
+            try:
+                title = result["title"]
+                title = re.sub("\W+", " ", title)
+                title = title.title()
+            except:
+                title = "Unsupported Title"
+            try:
+                duration = result["duration"]
+            except:
+                duration = "Unknown Mins"
+            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
+            try:
+                views = result["viewCount"]["short"]
+            except:
+                views = "Unknown Views"
+            try:
+                channel = result["channel"]["name"]
+            except:
+                channel = "Unknown Channel"
 
-    .songs::-webkit-scrollbar {
-      width: 6px;
-    }
+        async with aiohttp.ClientSession() as session:
+            async with session.get(thumbnail) as resp:
+                if resp.status == 200:
+                    f = await aiofiles.open(f"cache/thumb{videoid}.png", mode="wb")
+                    await f.write(await resp.read())
+                    await f.close()
 
-    .songs::-webkit-scrollbar-thumb {
-      background: #ffcc00;
-      border-radius: 10px;
-    }
-
-    .footer {
-      clear: both;
-      margin-top: 20px;
-      padding-top: 10px;
-      border-top: 1px solid #444;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      color: #aaa;
-    }
-
-    .progress {
-      width: 100%;
-      height: 5px;
-      background: #444;
-      border-radius: 10px;
-      margin: 8px 0;
-      position: relative;
-    }
-
-    .progress-bar {
-      width: 20%;
-      height: 100%;
-      background: #ffcc00;
-      border-radius: 10px;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="thumbnail">
-    <div class="playlist">
-      <h1>LONG DRIVE</h1>
-      <h2>BOLLYWOOD MIX <br> ARIJIT SINGH</h2>
-      <div class="songs">
-        <p>00:01 Apna Bana Le</p>
-        <p>04:21 Pal Pal Dil Ke Paas</p>
-        <p>08:13 Ve Mahi</p>
-        <p>12:36 Kalank</p>
-        <p>16:45 Phir Bhi Tumko Chaahunga</p>
-        <p>21:25 Qaafirana</p>
-        <p>25:36 Dekha Hazaro Dafaa</p>
-        <p>30:15 Dil Na Jaane Ya</p>
-        <p>34:50 Laal Ishq</p>
-        <p>40:21 Shayad</p>
-        <!-- add more as needed -->
-      </div>
-    </div>
-
-    <img src="https://i.ibb.co/0c9R1N2/arijit.jpg" alt="Arijit Singh">
-
-    <div class="footer">
-      <span>Bollywood Chartbusters | 15M views</span>
-      <span>1:55:45</span>
-    </div>
-
-    <div class="progress">
-      <div class="progress-bar"></div>
-    </div>
-  </div>
-
-</body>
-</html>
+        
+        colors = ["white", "red", "orange", "yellow", "green", "cyan", "azure", "blue", "violet", "magenta", "pink"]
+        border = random.choice(colors)
+        youtube = Image.open(f"cache/thumb{videoid}.png")
+        image1 = changeImageSize(1280, 720, youtube)
+        bg_bright = ImageEnhance.Brightness(image1)
+        bg_logo = bg_bright.enhance(1.1)
+        bg_contra = ImageEnhance.Contrast(bg_logo)
+        bg_logo = bg_contra.enhance(1.1)
+        logox = ImageOps.expand(bg_logo, border=7, fill=f"{border}")
+        background = changeImageSize(1280, 720, logox)
+        # image2 = image1.convert("RGBA")
+        # background = image2.filter(filter=ImageFilter.BoxBlur(1))
+        #enhancer = ImageEnhance.Brightness(background)
+        #background = enhancer.enhance(0.9)
+        #draw = ImageDraw.Draw(background)
+        #arial = ImageFont.truetype("BrandrdXMusic/assets/font2.ttf", 30)
+        #font = ImageFont.truetype("BrandrdXMusic/assets/font.ttf", 30)
+        # draw.text((1110, 8), unidecode(app.name), fill="white", font=arial)
+        """
+        draw.text(
+            (1, 1),
+            f"{channel} | {views[:23]}",
+            (1, 1, 1),
+            font=arial,
+        )
+        draw.text(
+            (1, 1),
+            clear(title),
+            (1, 1, 1),
+            font=font,
+        )
+        draw.line(
+            [(1, 1), (1, 1)],
+            fill="white",
+            width=1,
+            joint="curve",
+        )
+        draw.ellipse(
+            [(1, 1), (2, 1)],
+            outline="white",
+            fill="white",
+            width=1,
+        )
+        draw.text(
+            (1, 1),
+            "00:00",
+            (1, 1, 1),
+            font=arial,
+        )
+        draw.text(
+            (1, 1),
+            f"{duration[:23]}",
+            (1, 1, 1),
+            font=arial,
+        )
+        """
+        try:
+            os.remove(f"cache/thumb{videoid}.png")
+        except:
+            pass
+        background.save(f"cache/{videoid}.png")
+        return f"cache/{videoid}.png"
+    except Exception as e:
+        print(e)
+        return YOUTUBE_IMG_URL
