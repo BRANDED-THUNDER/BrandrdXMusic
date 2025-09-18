@@ -25,7 +25,7 @@ def track_markup(_, videoid, user_id, channel, fplay):
     return buttons
 
 
-    buttons = [
+buttons =
         [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
