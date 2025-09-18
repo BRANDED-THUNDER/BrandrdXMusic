@@ -5,19 +5,6 @@ from pyrogram.types import InlineKeyboardButton
 from BrandrdXMusic.utils.formatters import time_to_seconds
 
 
-# Make sure you have this helper function somewhere
-def time_to_seconds(time_str: str) -> int:
-    """Convert HH:MM:SS or MM:SS to total seconds."""
-    parts = list(map(int, time_str.split(":")))
-    if len(parts) == 3:
-        h, m, s = parts
-    elif len(parts) == 2:
-        h, m, s = 0, parts[0], parts[1]
-    else:
-        h, m, s = 0, 0, parts[0]
-    return h * 3600 + m * 60 + s
-
-
 def track_markup(_, videoid, user_id, channel, fplay):
     return [
         [
@@ -38,6 +25,14 @@ def track_markup(_, videoid, user_id, channel, fplay):
         ],
     ]
 
+  buttons = [
+      [
+            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
+            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
+            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
+            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+        ],
 
 def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
@@ -67,13 +62,6 @@ def stream_markup_timer(_, chat_id, played, dur):
         bar = "—————————❥"
 
     return [
-        [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
-        ],
         [
             InlineKeyboardButton(
                 text=f"{played} {bar} {dur}",
