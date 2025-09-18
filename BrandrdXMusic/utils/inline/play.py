@@ -5,8 +5,21 @@ from pyrogram.types import InlineKeyboardButton
 from BrandrdXMusic.utils.formatters import time_to_seconds
 
 
+# Make sure you have this helper function somewhere
+def time_to_seconds(time_str: str) -> int:
+    """Convert HH:MM:SS or MM:SS to total seconds."""
+    parts = list(map(int, time_str.split(":")))
+    if len(parts) == 3:
+        h, m, s = parts
+    elif len(parts) == 2:
+        h, m, s = 0, parts[0], parts[1]
+    else:
+        h, m, s = 0, 0, parts[0]
+    return h * 3600 + m * 60 + s
+
+
 def track_markup(_, videoid, user_id, channel, fplay):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -24,35 +37,36 @@ def track_markup(_, videoid, user_id, channel, fplay):
             )
         ],
     ]
-    return buttons
 
 
 def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
-    duration_sec = time_to_seconds(dur)
+    duration_sec = time_to_seconds(dur) or 1  # avoid ZeroDivisionError
     percentage = (played_sec / duration_sec) * 100
     tgn = math.floor(percentage)
-    if 0 < tgn <= 10:
+
+    if 0 <= tgn <= 10:
         bar = "❥—————————"
-    elif 10 < tgn < 20:
+    elif 10 < tgn <= 20:
         bar = "—❥————————"
-    elif 20 <= tgn < 30:
+    elif 20 < tgn <= 30:
         bar = "——❥———————"
-    elif 30 <= tgn < 40:
+    elif 30 < tgn <= 40:
         bar = "———❥——————"
-    elif 40 <= tgn < 50:
+    elif 40 < tgn <= 50:
         bar = "————❥—————"
-    elif 50 <= tgn < 60:
+    elif 50 < tgn <= 60:
         bar = "—————❥————"
-    elif 60 <= tgn < 70:
+    elif 60 < tgn <= 70:
         bar = "——————❥———"
-    elif 70 <= tgn < 80:
+    elif 70 < tgn <= 80:
         bar = "———————❥——"
-    elif 80 <= tgn < 95:
+    elif 80 < tgn <= 95:
         bar = "————————❥—"
     else:
         bar = "—————————❥"
-    buttons = [
+
+    return [
         [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
@@ -66,23 +80,16 @@ def stream_markup_timer(_, chat_id, played, dur):
                 callback_data="GetTimer",
             )
         ],
-       
         [
-            InlineKeyboardButton(
-                text="ᴏᴡɴᴇʀ", url="https://t.me/BRANDEDKING8",
-            ),
-            InlineKeyboardButton(
-                text="sᴜᴘᴘᴏʀᴛ", url="https://t.me/BRANDED_WORLD",
-            ),
+            InlineKeyboardButton(text="ᴏᴡɴᴇʀ", url="https://t.me/BRANDEDKING8"),
+            InlineKeyboardButton(text="sᴜᴘᴘᴏʀᴛ", url="https://t.me/BRANDED_WORLD"),
         ],
-       
         [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")],
     ]
-    return buttons
 
 
 def stream_markup(_, chat_id):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
@@ -91,21 +98,15 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
         [
-            InlineKeyboardButton(
-                text="ᴏᴡɴᴇʀ", url="https://t.me/BRANDEDKING8",
-            ),
-            InlineKeyboardButton(
-                text="sᴜᴘᴘᴏʀᴛ", url="https://t.me/BRANDED_WORLD",
-            ),
+            InlineKeyboardButton(text="ᴏᴡɴᴇʀ", url="https://t.me/BRANDEDKING8"),
+            InlineKeyboardButton(text="sᴜᴘᴘᴏʀᴛ", url="https://t.me/BRANDED_WORLD"),
         ],
-        
         [InlineKeyboardButton(text=_["CLOSE_BUTTON"], callback_data="close")],
     ]
-    return buttons
 
 
 def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -123,11 +124,10 @@ def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
             ),
         ],
     ]
-    return buttons
 
 
 def livestream_markup(_, videoid, user_id, mode, channel, fplay):
-    buttons = [
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_3"],
@@ -141,12 +141,11 @@ def livestream_markup(_, videoid, user_id, mode, channel, fplay):
             ),
         ],
     ]
-    return buttons
 
 
 def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
-    query = f"{query[:20]}"
-    buttons = [
+    safe_query = query.replace("|", "")[:20]  # sanitize to avoid callback issues
+    return [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -160,16 +159,16 @@ def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
         [
             InlineKeyboardButton(
                 text="◁",
-                callback_data=f"slider B|{query_type}|{query}|{user_id}|{channel}|{fplay}",
+                callback_data=f"slider B|{query_type}|{safe_query}|{user_id}|{channel}|{fplay}",
             ),
             InlineKeyboardButton(
                 text=_["CLOSE_BUTTON"],
-                callback_data=f"forceclose {query}|{user_id}",
+                callback_data=f"forceclose {videoid}|{user_id}",
             ),
             InlineKeyboardButton(
                 text="▷",
-                callback_data=f"slider F|{query_type}|{query}|{user_id}|{channel}|{fplay}",
+                callback_data=f"slider F|{query_type}|{safe_query}|{user_id}|{channel}|{fplay}",
             ),
         ],
     ]
-    return buttons
+
