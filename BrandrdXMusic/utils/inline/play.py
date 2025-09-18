@@ -27,44 +27,44 @@ def track_markup(_, videoid, user_id, channel, fplay):
     return buttons
 
 
-def stream_markup_timer(_, vidid, chat_id, played, dur):
+def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
-    umm = math.floor(percentage)
-    if 0 < umm <= 10:
+    tgn = math.floor(percentage)
+    if 0 < tgn <= 10:
         bar = "❥—————————"
-    elif 10 < umm < 20:
+    elif 10 < tgn < 20:
         bar = "—❥————————"
-    elif 20 <= umm < 30:
+    elif 20 <= tgn < 30:
         bar = "——❥———————"
-    elif 30 <= umm < 40:
+    elif 30 <= tgn < 40:
         bar = "———❥——————"
-    elif 40 <= umm < 50:
+    elif 40 <= tgn < 50:
         bar = "————❥—————"
-    elif 50 <= umm < 60:
+    elif 50 <= tgn < 60:
         bar = "—————❥————"
-    elif 60 <= umm < 70:
+    elif 60 <= tgn < 70:
         bar = "——————❥———"
-    elif 70 <= umm < 80:
+    elif 70 <= tgn < 80:
         bar = "———————❥——"
-    elif 80 <= umm < 95:
+    elif 80 <= tgn < 95:
         bar = "————————❥—"
     else:
         bar = "—————————❥"
     buttons = [
-       [
-            InlineKeyboardButton(
-                text=f"{played} {bar} {dur}",
-                callback_data="GetTimer",
-            )
-        ],
         [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
             InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
             InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"{played} {bar} {dur}",
+                callback_data="GetTimer",
+            )
         ],
        
         [
