@@ -1,2 +1,2 @@
-from .database import *
-from .clonedb import *
+from .admins import *
+from .language import *
