@@ -6,7 +6,7 @@ import aiofiles
 import aiohttp
 from PIL import (Image, ImageDraw, ImageEnhance, ImageFilter,
                  ImageFont, ImageOps)
-from youtubesearchpython.__future__ import VideosSearch
+from py_yt import VideosSearch
 
 YOUTUBE_IMG_URL = "https://te.legra.ph/file/4310ea5f523520b2b765b.jpg" # yaha pe default img url daal dena
 
