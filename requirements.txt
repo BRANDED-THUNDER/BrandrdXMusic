@@ -28,3 +28,4 @@ py-yt-search
 https://github.com/KurimuzonAkuma/pyrogram/archive/v2.1.23.zip
 lyricsgenius==3.0.0
 MukeshAPI
+SafoneAPI
