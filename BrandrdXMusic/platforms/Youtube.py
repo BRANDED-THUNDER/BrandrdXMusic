@@ -22,7 +22,7 @@ import config
 import traceback
 from BrandrdXMusic import LOGGER
 
-API_URL = "https://api.shrutibots.site""  # Change to your API server URL
+API_URL = "https://api.shrutibots.site"  # Change to your API server URL
 API_KEY = "ShrutiBotsWtQUKDTAv5KUMyByWwFe"
 
 def cookie_txt_file():
