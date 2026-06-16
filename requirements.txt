@@ -17,3 +17,4 @@ pykeyboard==0.1.5
 pillow==10.2.0
 numpy==1.26.4
 pytz==2024.1
+httpx>=0.28.1
