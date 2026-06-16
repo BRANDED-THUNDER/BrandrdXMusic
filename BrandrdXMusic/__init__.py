@@ -15,6 +15,7 @@ heroku()
 app = Hotty()
 userbot = Userbot()
 api = SafoneAPI()
+config = Config()
 
 
 from .platforms import *
