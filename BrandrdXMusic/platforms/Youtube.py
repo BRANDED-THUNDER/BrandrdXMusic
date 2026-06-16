@@ -9,7 +9,7 @@ from pathlib import Path
 from py_yt import Playlist, VideosSearch
 
 from BrandrdXMusic import config, logger
-from BrandrdXMusic.helpers import NexGenApi, Track, utils
+from BrandrdXMusic.utils import NexGenApi, Track, utils
 
 
 class YouTube:
