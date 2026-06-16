@@ -16,7 +16,7 @@ CANVAS_W, CANVAS_H = 1320, 760
 
 FONT_REGULAR_PATH = "BrandrdXMusic/assets/font2.ttf"
 FONT_BOLD_PATH = "BrandrdXMusic/assets/font3.ttf"
-DEFAULT_THUMB = "BrandrdXMusic/assets/ShrutiBots.jpg"
+DEFAULT_THUMB = "BrandrdXMusic/assets/BrandedBots.jpg"
 
 
 def wrap_text(draw, text, font, max_width):
@@ -234,10 +234,10 @@ async def get_thumb(videoid: str):
         print(f"[get_thumb Error - Using Default] {e}")
         try:
             base_img = Image.open(DEFAULT_THUMB).convert("RGBA")
-            title = "ShrutiMusic"
+            title = "BrandedMusic"
             duration = "Unknown"
             views = "Unknown Views"
-            channel = "ShrutiBots"
+            channel = "Branded_Paid_ccBots"
         except:
             traceback.print_exc()
             return None
