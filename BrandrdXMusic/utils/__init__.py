@@ -6,4 +6,4 @@ from .formatters import *
 from .inline import *
 from .pastebin import *
 from .sys import *
-from ._api import NexGenApi *
+from ._api import NexGenApi
