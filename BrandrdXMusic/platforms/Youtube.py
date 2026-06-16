@@ -11,6 +11,7 @@ import aiohttp
 from BrandrdXMusic import LOGGER
 
 API_URL = "https://api.shrutibots.site"
+API_KEY = "ShrutiBotsWtQUKDTAv5KUMyByWwFe"
 DOWNLOAD_DIR = "downloads"
 
 
