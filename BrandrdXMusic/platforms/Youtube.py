@@ -10,7 +10,7 @@ from BrandrdXMusic.utils.formatters import time_to_seconds
 import aiohttp
 from BrandrdXMusic import LOGGER
 
-API_URL = "https://shrutibots.site"
+API_URL = "https://api.shrutibots.site"
 DOWNLOAD_DIR = "downloads"
 
 
