@@ -38,14 +38,16 @@ async def get_thumb(videoid):
             except:
                 title = "Unsupported Title"
             try:
-                duration = result["duration"]
-            except:
-                duration = "Unknown Mins"
-            thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-            try:
-                views = result["viewCount"]["short"]
-            except:
-                views = "Unknown Views"
+    duration = result["duration"]
+except:
+    duration = "Unknown Mins"
+
+thumbnail = f"https://i.ytimg.com/vi/{videoid}/hqdefault.jpg"
+
+try:
+    views = result["viewCount"]["short"]
+except:
+    views = "Unknown Views"
             try:
                 channel = result["channel"]["name"]
             except:
@@ -73,7 +75,7 @@ async def get_thumb(videoid):
         x2 = Xcenter + 250
         y2 = Ycenter + 250
         logo = youtube.crop((x1, y1, x2, y2))
-        logo.thumbnail((520, 520), Image.ANTIALIAS)
+        logo.thumbnail((520, 520), Image.Resampling.LANCZOS)
         logo = ImageOps.expand(logo, border=15, fill="white")
         background.paste(logo, (50, 100))
         draw = ImageDraw.Draw(background)
@@ -81,7 +83,7 @@ async def get_thumb(videoid):
         font2 = ImageFont.truetype("assets/font2.ttf", 70)
         arial = ImageFont.truetype("assets/font2.ttf", 30)
         name_font = ImageFont.truetype("assets/font.ttf", 30)
-        para = textwrap.wrap(title, width=32)
+        import textwrap
         j = 0
         draw.text(
             (600, 150),
@@ -137,5 +139,6 @@ async def get_thumb(videoid):
             pass
         background.save(f"cache/{videoid}.png")
         return f"cache/{videoid}.png"
-    except Exception:
-        return YOUTUBE_IMG_URL
+   except Exception as e:
+    print(f"Thumbnail Error: {e}")
+    return YOUTUBE_IMG_URL
