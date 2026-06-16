@@ -201,7 +201,7 @@ def add_glow_ring(canvas, x, y, size, color, blur_amount):
     canvas.paste(ring_img, (x - 15, y - 15), ring_img)
 
 
-async def gen_thumb(videoid: str):
+async def get_thumb(videoid: str):
     url = f"https://www.youtube.com/watch?v={videoid}"
     thumb_path = None
     
@@ -231,7 +231,7 @@ async def gen_thumb(videoid: str):
             base_img = Image.open(DEFAULT_THUMB).convert("RGBA")
 
     except Exception as e:
-        print(f"[gen_thumb Error - Using Default] {e}")
+        print(f"[get_thumb Error - Using Default] {e}")
         try:
             base_img = Image.open(DEFAULT_THUMB).convert("RGBA")
             title = "ShrutiMusic"
@@ -370,6 +370,6 @@ async def gen_thumb(videoid: str):
         return str(out)
 
     except Exception as e:
-        print(f"[gen_thumb Processing Error] {e}")
+        print(f"[get_thumb Processing Error] {e}")
         traceback.print_exc()
         return None
