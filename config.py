@@ -14,11 +14,6 @@ API_HASH = getenv("API_HASH", None)
 # Get your token from @BotFather on Telegram.
 BOT_TOKEN = getenv("BOT_TOKEN", None)
 
-API_URL = getenv("API_URL", 'https://pvtz.nexgenbots.xyz')
-VIDEO_API_URL = getenv("VIDEO_API_URL", "https://api.video.nexgenbots.xyz")
-API_KEY = getenv("API_KEY", "30DxNexGenBots431c89") # Get this value from https://console.nexgenbots.xyz 
-
-
 # Get your mongo url from cloud.mongodb.com
 MONGO_DB_URI = getenv("MONGO_DB_URI", None)
 
