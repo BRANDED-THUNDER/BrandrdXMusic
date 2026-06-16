@@ -14,9 +14,9 @@ API_HASH = getenv("API_HASH", None)
 # Get your token from @BotFather on Telegram.
 BOT_TOKEN = getenv("BOT_TOKEN", None)
 
-API_URL = getenv("SHRUTI_API_URL", "https://api.shrutibots.site")
+API_URL = getenv("API_URL", "https://api.shrutibots.site")
 
-API_KEY = getenv("SHRUTI_API_KEY", "ShrutiBotsWtQUKDTAv5KUMyByWwFe") ## Get This API KEY FROM TELEGRAM BOT USERNAME: @SHRUTIAPIBOT 
+API_KEY = getenv("API_KEY", "ShrutiBotsWtQUKDTAv5KUMyByWwFe") ## Get This API KEY FROM TELEGRAM BOT USERNAME: @SHRUTIAPIBOT 
 
 
 # Get your mongo url from cloud.mongodb.com
